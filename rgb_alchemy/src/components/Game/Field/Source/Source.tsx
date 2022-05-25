@@ -17,7 +17,7 @@ const Source: FC<ISourceProps> = (props) => {
   return (
     <SSource
       $color={props.cell.color}
-      $clickable={props.gameStatus === gameStatus.Initial ? true : false}
+      $clickable={props.gameStatus === gameStatus.Initial}
       onClick={handleSourceClick}
     />
   );

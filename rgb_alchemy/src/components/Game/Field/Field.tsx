@@ -19,7 +19,7 @@ const Field: FC<IFieldProps> = (props) => {
         }
       >
         {Array.isArray(props.field) &&
-          props.field.map((row, i) => {
+          props.field.map((row) => {
             return row.map((cell) => {
               return (
                 <SGridItem key={cell.id}>
