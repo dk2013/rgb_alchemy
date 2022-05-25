@@ -13,6 +13,7 @@ export interface IGameData {
   status: gameStatus;
   stepCount: number;
   nextColor: number[]; // To paint Source
+  isDnDEnabled: boolean;
 }
 
 export interface IData {

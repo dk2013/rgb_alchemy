@@ -9,18 +9,20 @@ interface ICellProps {
   cell: ICell;
   gameStatus?: gameStatus;
   onSourceClick: (cellId: string) => void;
+  onCellDrop: (e: DragEvent, cellId: string) => void;
 }
 
 const Cell: FC<ICellProps> = (props) => {
   switch (props.cell.type) {
     case cellType.Tile:
-      return <Tile color={props.cell.color} />;
+      return <Tile cell={props.cell} />;
     case cellType.Source:
       return (
         <Source
           cell={props.cell}
           gameStatus={props.gameStatus}
           onSourceClick={props.onSourceClick}
+          onCellDrop={props.onCellDrop}
         />
       );
     default:

@@ -1,12 +1,30 @@
 import React, { FC } from "react";
 import styled from "styled-components";
+import { ICell } from "../../../models/field";
 
 interface ITileProps {
-  color?: number[];
+  cell: ICell;
 }
 
 const Tile: FC<ITileProps> = (props) => {
-  return <STile $color={props.color} />;
+  const handleDragStart = (e: DragEvent) => {
+    e.dataTransfer?.setData("id", props.cell.id);
+  };
+
+  let additionalProps = {};
+  if (props.cell.isDnDEnabled) {
+    additionalProps = {
+      onDragStart: handleDragStart,
+    };
+  }
+
+  return (
+    <STile
+      {...additionalProps}
+      draggable={props.cell.isDnDEnabled}
+      $color={props.cell.color}
+    />
+  );
 };
 
 export default Tile;

@@ -8,6 +8,7 @@ interface IFieldProps {
   data: IData;
   field: ICell[][];
   onSourceClick: (cellId: string) => void;
+  onCellDrop: (e: DragEvent, cellId: string) => void;
 }
 
 const Field: FC<IFieldProps> = (props) => {
@@ -27,6 +28,7 @@ const Field: FC<IFieldProps> = (props) => {
                     cell={cell}
                     gameStatus={props.data.game?.status}
                     onSourceClick={props.onSourceClick}
+                    onCellDrop={props.onCellDrop}
                   />
                 </SGridItem>
               );

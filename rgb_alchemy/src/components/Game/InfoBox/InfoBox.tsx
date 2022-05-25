@@ -2,12 +2,27 @@ import { FC } from "react";
 import styled from "styled-components";
 import { IData } from "../../../models/gameData";
 import Tile from "../../../shared/components/Tile/Tile";
+import { cellType, ICell } from "../../../models/field";
 
 interface IInfoBoxProps {
   data: IData;
 }
 
 const InfoBox: FC<IInfoBoxProps> = (props) => {
+  const targetCell: ICell = {
+    id: "0",
+    color: props.data.initial?.target || [0, 0, 0],
+    type: cellType.Empty,
+    isDnDEnabled: false,
+  };
+
+  const closestCell: ICell = {
+    id: "1",
+    color: props.data.game?.closestColor || [0, 0, 0],
+    type: cellType.Empty,
+    isDnDEnabled: false,
+  };
+
   return (
     <div>
       <h3>RGB Alchemy</h3>
@@ -18,10 +33,10 @@ const InfoBox: FC<IInfoBoxProps> = (props) => {
           (props.data.game?.stepCount as number)}
       </SRow>
       <SFlexRow>
-        Target color &nbsp; <Tile color={props.data.initial?.target} />
+        Target color &nbsp; <Tile cell={targetCell} />
       </SFlexRow>
       <SFlexRow>
-        Closest color &nbsp; <Tile color={props.data.game?.closestColor} />
+        Closest color &nbsp; <Tile cell={closestCell} />
       </SFlexRow>
     </div>
   );

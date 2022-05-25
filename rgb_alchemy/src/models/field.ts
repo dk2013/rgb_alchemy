@@ -8,4 +8,5 @@ export interface ICell {
   id: string;
   color: number[];
   type: cellType;
+  isDnDEnabled: boolean;
 }

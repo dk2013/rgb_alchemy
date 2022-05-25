@@ -7,6 +7,7 @@ interface ISourceProps {
   cell: ICell;
   gameStatus?: gameStatus;
   onSourceClick: (cellId: string) => void;
+  onCellDrop: (e: DragEvent, cellId: string) => void;
 }
 
 const Source: FC<ISourceProps> = (props) => {
@@ -14,8 +15,25 @@ const Source: FC<ISourceProps> = (props) => {
     props.onSourceClick(props.cell.id);
   };
 
+  const handleDragOver = (e: DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: DragEvent) => {
+    props.onCellDrop(e, props.cell.id);
+  };
+
+  let additionalProps = {};
+  if (props.cell.isDnDEnabled) {
+    additionalProps = {
+      onDragOver: handleDragOver,
+      onDrop: handleDrop,
+    };
+  }
+
   return (
     <SSource
+      {...additionalProps}
       $color={props.cell.color}
       $clickable={props.gameStatus === gameStatus.Initial}
       onClick={handleSourceClick}

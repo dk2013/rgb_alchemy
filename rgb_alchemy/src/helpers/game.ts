@@ -46,6 +46,7 @@ export const generateInitialField = (initialData: IFetchedData): ICell[][] => {
         id: x + "," + y,
         color: [0, 0, 0],
         type: type,
+        isDnDEnabled: false,
       };
 
       initialField[y][x] = cell;
@@ -165,8 +166,8 @@ export const getPaintedTilesLine = (
   return updatedField;
 };
 
-export // Deep copy of field
-const getFieldCopy = (field: ICell[][]) => {
+// Deep copy of field
+export const getFieldCopy = (field: ICell[][]) => {
   let newFieldState: ICell[][] = [];
 
   for (let y = 0; y < field.length; y++) {
@@ -177,4 +178,11 @@ const getFieldCopy = (field: ICell[][]) => {
   }
 
   return newFieldState;
+};
+
+export const getCellColorById = (field: ICell[][], cellId: string) => {
+  const x = getXFromCellId(cellId);
+  const y = getYFromCellId(cellId);
+
+  return field[y][x].color;
 };
