@@ -14,7 +14,7 @@ import {
   generateInitialField,
   getCellColorById,
   getFieldCopy,
-  getPaintedTilesLine,
+  getFieldWithUpdatedTilesLine,
   getXFromCellId,
   getYFromCellId,
 } from "../../helpers/game";
@@ -157,7 +157,7 @@ const Game: FC = () => {
         color: cellColor,
       };
 
-      return getPaintedTilesLine(data, cellId, updatedField);
+      return getFieldWithUpdatedTilesLine(data, cellId, updatedField);
     });
   };
 
