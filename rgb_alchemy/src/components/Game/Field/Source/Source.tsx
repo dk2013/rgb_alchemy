@@ -50,8 +50,8 @@ interface ISSource {
 
 const SSource = styled.div`
   display: inline-block;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   border: 2px solid rgb(200, 200, 200);
   margin: 1px;

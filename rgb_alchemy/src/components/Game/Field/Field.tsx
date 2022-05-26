@@ -43,13 +43,14 @@ const Field: FC<IFieldProps> = (props) => {
 export default Field;
 
 const SGridContainer = styled.div<{ $columnsNumber: number }>`
+  margin: 0 20px;
   display: inline-grid;
   ${(props): string => {
     return `
       grid-template-columns: repeat(${props.$columnsNumber}, 1fr);
     `;
   }};
-  gap: 6px;
+  gap: 1px;
 `;
 
 const SGridItem = styled.div`

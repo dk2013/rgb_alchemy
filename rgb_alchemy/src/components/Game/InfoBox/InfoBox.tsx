@@ -27,8 +27,10 @@ const InfoBox: FC<IInfoBoxProps> = (props) => {
   };
 
   return (
-    <div>
-      <h3>RGB Alchemy</h3>
+    <SInfoBox>
+      <SRow>
+        <h3>RGB Alchemy</h3>
+      </SRow>
       <SRow>User ID: {props.data.initial?.userId}</SRow>
       <SRow>
         Moves left:{" "}
@@ -43,18 +45,23 @@ const InfoBox: FC<IInfoBoxProps> = (props) => {
         &nbsp;Δ=
         {props.delta.toFixed(2)}%
       </SFlexRow>
-    </div>
+    </SInfoBox>
   );
 };
 
 export default InfoBox;
 
+const SInfoBox = styled.div`
+  margin: 20px;
+`;
+
 const SRow = styled.div`
-  line-height: 34px;
+  margin-bottom: 15px;
 `;
 
 const SFlexRow = styled.div`
   display: flex;
   align-items: center;
   line-height: 44px;
+  margin-bottom: 10px;
 `;

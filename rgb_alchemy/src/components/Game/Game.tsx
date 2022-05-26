@@ -1,5 +1,6 @@
-import { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import axios from "axios";
+import ReactTooltip from "react-tooltip";
 import InfoBox from "./InfoBox/InfoBox";
 import Field from "./Field/Field";
 import { cellType, ICell } from "../../models/field";
@@ -38,6 +39,7 @@ const Game: FC = () => {
 
   useEffect(() => {
     setClosestColorAndDelta();
+    ReactTooltip.rebuild();
   }, [field]);
 
   useEffect(() => {
@@ -331,6 +333,11 @@ const Game: FC = () => {
         field={field}
         onSourceClick={handleSourceClick}
         onCellDrop={handleCellDrop}
+      />
+      <ReactTooltip
+        place="bottom"
+        type="light"
+        effect="solid"
       />
     </>
   );
