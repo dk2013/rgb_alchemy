@@ -1,4 +1,4 @@
-export const initURL = "http://localhost:9876/init";
+export const INIT_URL = "http://localhost:9876/init";
 
 export interface IFetchedData {
   userId: string;

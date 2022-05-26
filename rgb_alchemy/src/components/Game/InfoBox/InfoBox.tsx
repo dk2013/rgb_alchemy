@@ -1,17 +1,19 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { IData } from "../../../models/gameData";
+import { DEFAULT_BORDER_COLOR, IData } from "../../../models/gameData";
 import Tile from "../../../shared/components/Tile/Tile";
 import { cellType, ICell } from "../../../models/field";
 
 interface IInfoBoxProps {
   data: IData;
+  delta: number;
 }
 
 const InfoBox: FC<IInfoBoxProps> = (props) => {
   const targetCell: ICell = {
     id: "0",
     color: props.data.initial?.target || [0, 0, 0],
+    borderColor: DEFAULT_BORDER_COLOR,
     type: cellType.Empty,
     isDnDEnabled: false,
   };
@@ -19,6 +21,7 @@ const InfoBox: FC<IInfoBoxProps> = (props) => {
   const closestCell: ICell = {
     id: "1",
     color: props.data.game?.closestColor || [0, 0, 0],
+    borderColor: DEFAULT_BORDER_COLOR,
     type: cellType.Empty,
     isDnDEnabled: false,
   };
@@ -37,6 +40,8 @@ const InfoBox: FC<IInfoBoxProps> = (props) => {
       </SFlexRow>
       <SFlexRow>
         Closest color &nbsp; <Tile cell={closestCell} />
+        &nbsp;Δ=
+        {props.delta.toFixed(2)}%
       </SFlexRow>
     </div>
   );

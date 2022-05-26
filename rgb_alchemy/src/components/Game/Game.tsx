@@ -3,12 +3,17 @@ import axios from "axios";
 import InfoBox from "./InfoBox/InfoBox";
 import Field from "./Field/Field";
 import { cellType, ICell } from "../../models/field";
-import { IFetchedData, initURL } from "../../models/fetchedData";
+import { IFetchedData, INIT_URL } from "../../models/fetchedData";
 import {
+  CLOSEST_COLOR_BORDER,
+  DEFAULT_BORDER_COLOR,
+  DEFAULT_CELL_ID_WITH_CLOSEST_COLOR,
+  DEFAULT_DELTA,
+  DELTA_WIN_CONDITION,
+  INITIAL_STEPS_NUMBER,
   gameStatus,
   IData,
   IGameData,
-  INITIAL_STEPS_NUMBER,
 } from "../../models/gameData";
 import {
   generateInitialField,
@@ -22,15 +27,159 @@ import {
 const Game: FC = () => {
   const [data, setData] = useState<IData>({});
   const [field, setField] = useState<ICell[][]>([]);
+  const [delta, setDelta] = useState<number>(DEFAULT_DELTA);
+  const [cellIdWithClosestColor, setCellIdWithClosestColor] = useState(
+    DEFAULT_CELL_ID_WITH_CLOSEST_COLOR
+  );
 
   useEffect(() => {
     initGame();
   }, []);
 
-  const initGame = () => {
-    axios.get<IFetchedData>(initURL).then(({ data }) => {
+  useEffect(() => {
+    setClosestColorAndDelta();
+  }, [field]);
+
+  useEffect(() => {
+    resetCellBorders();
+    setClosestColorCellBorder(cellIdWithClosestColor);
+  }, [cellIdWithClosestColor]);
+
+  useEffect(() => {
+    checkWinConditions();
+    console.log("here delta");
+  }, [delta]);
+
+  const checkGameOverConditions = (stepCount: number) => {
+    if ((data.initial?.maxMoves as number) - stepCount === 0) {
+      setData((prevState) => ({
+        ...prevState,
+        game: {
+          ...(prevState.game as IGameData),
+          status: gameStatus.Finished,
+        },
+      }));
+
+      if (window.confirm("You lose. Do you want to play again?")) {
+        restart();
+      }
+    }
+  };
+
+  const checkWinConditions = () => {
+    if (delta < DELTA_WIN_CONDITION) {
+      setData((prevState) => ({
+        ...prevState,
+        game: {
+          ...(prevState.game as IGameData),
+          status: gameStatus.Finished,
+        },
+      }));
+
+      if (window.confirm("You win. Do you want to play again?")) {
+        restart();
+      }
+    }
+  };
+
+  const restart = () => {
+    initGame(data.initial?.userId);
+  };
+
+  const setClosestColorAndDelta = () => {
+    const { leastDelta, closestColor } = getClosestColorAndDelta();
+
+    setData((prevState) => ({
+      ...prevState,
+      game: {
+        ...(prevState.game as IGameData),
+        closestColor,
+      },
+    }));
+
+    setDelta(leastDelta);
+  };
+
+  const resetCellBorders = () => {
+    setField((prevState) => {
+      const updatedField = getFieldCopy(prevState);
+
+      for (let y = 1; y <= (data.initial?.height as number); y++) {
+        for (let x = 1; x <= (data.initial?.width as number); x++) {
+          updatedField[y][x] = {
+            ...updatedField[y][x],
+            borderColor: DEFAULT_BORDER_COLOR,
+          };
+        }
+      }
+
+      return updatedField;
+    });
+  };
+
+  const setClosestColorCellBorder = (cellId: string) => {
+    setField((prevState) => {
+      const x = getXFromCellId(cellId);
+      const y = getYFromCellId(cellId);
+      const updatedField = getFieldCopy(prevState);
+
+      if (typeof updatedField[y]?.[x] !== "undefined") {
+        updatedField[y][x] = {
+          ...updatedField[y][x],
+          borderColor: CLOSEST_COLOR_BORDER,
+        };
+      }
+
+      return updatedField;
+    });
+  };
+
+  const getClosestColorAndDelta = () => {
+    let leastDelta = DEFAULT_DELTA;
+    let closestColor = [0, 0, 0];
+    const targetColor = data.initial?.target as number[];
+    let cellColor;
+    let currentDelta;
+
+    for (let y = 1; y <= (data.initial?.height as number); y++) {
+      for (let x = 1; x <= (data.initial?.width as number); x++) {
+        cellColor = field[y][x].color;
+
+        // Skip a cell if it is black
+        if (cellColor[0] === 0 && cellColor[1] === 0 && cellColor[2] === 0) {
+          continue;
+        }
+
+        currentDelta =
+          (1 / 255 / Math.sqrt(3)) *
+          Math.sqrt(
+            Math.pow(targetColor[0] - cellColor[0], 2) +
+              Math.pow(targetColor[1] - cellColor[1], 2) +
+              Math.pow(targetColor[2] - cellColor[2], 2)
+          ) *
+          100;
+        if (currentDelta < leastDelta) {
+          setCellIdWithClosestColor(x + "," + y);
+
+          leastDelta = currentDelta;
+          closestColor = cellColor;
+        }
+      }
+    }
+
+    return { leastDelta, closestColor };
+  };
+
+  const initGame = (userId?: string) => {
+    let url = INIT_URL;
+    if (userId) {
+      url = INIT_URL + "/user/" + userId;
+    }
+
+    axios.get<IFetchedData>(url).then(({ data }) => {
       setInitialGame(data);
       setInitialField(data);
+      setClosestColorCellBorder(DEFAULT_CELL_ID_WITH_CLOSEST_COLOR);
     });
   };
 
@@ -169,12 +318,14 @@ const Game: FC = () => {
       paintSourceAndTilesLine(sourceCellId, tileColor);
 
       increaseStepCount(stepCount);
+
+      checkGameOverConditions(stepCount + 1);
     }
   };
 
   return (
     <>
-      <InfoBox data={data} />
+      <InfoBox data={data} delta={delta} />
       <Field
         data={data}
         field={field}

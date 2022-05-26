@@ -7,6 +7,7 @@ export const enum cellType {
 export interface ICell {
   id: string;
   color: number[];
+  borderColor: number[];
   type: cellType;
   isDnDEnabled: boolean;
 }

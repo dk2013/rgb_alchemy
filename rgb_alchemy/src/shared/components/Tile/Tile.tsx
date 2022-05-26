@@ -23,6 +23,7 @@ const Tile: FC<ITileProps> = (props) => {
       {...additionalProps}
       draggable={props.cell.isDnDEnabled}
       $color={props.cell.color}
+      $borderColor={props.cell.borderColor}
     />
   );
 };
@@ -30,7 +31,8 @@ const Tile: FC<ITileProps> = (props) => {
 export default Tile;
 
 interface ISTile {
-  $color?: Number[];
+  $color?: number[];
+  $borderColor?: number[];
 }
 
 const STile = styled.div`
@@ -38,7 +40,7 @@ const STile = styled.div`
   width: 22px;
   height: 22px;
   border-radius: 2px;
-  // background-color:
+  margin: 1px;
   ${(props: ISTile): string => {
     return `
       background-color: rgb(${props.$color?.[0] || 0}, ${
@@ -46,6 +48,13 @@ const STile = styled.div`
     }, ${props.$color?.[2] || 0});
     `;
   }};
-  border: 2px solid #ccc;
-  margin: 1px;
+  border-style: solid;
+  border-width: 2px;
+  ${(props: ISTile): string => {
+    return `
+      border-color: rgb(${props.$borderColor?.[0] || 0}, ${
+      props.$borderColor?.[1] || 0
+    }, ${props.$borderColor?.[2] || 0});
+    `;
+  }};
 `;

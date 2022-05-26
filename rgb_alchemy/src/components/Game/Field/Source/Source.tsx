@@ -53,7 +53,7 @@ const SSource = styled.div`
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  border: 2px solid #ccc;
+  border: 2px solid rgb(200, 200, 200);
   margin: 1px;
   ${(props: ISSource): string => {
     return `

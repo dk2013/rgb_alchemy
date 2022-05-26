@@ -1,6 +1,6 @@
 import { IFetchedData } from "../models/fetchedData";
 import { cellType, ICell } from "../models/field";
-import { IData } from "../models/gameData";
+import { DEFAULT_BORDER_COLOR, IData } from "../models/gameData";
 
 export const enum sourcePosition {
   Top,
@@ -45,6 +45,7 @@ export const generateInitialField = (initialData: IFetchedData): ICell[][] => {
       let cell: ICell = {
         id: x + "," + y,
         color: [0, 0, 0],
+        borderColor: DEFAULT_BORDER_COLOR,
         type: type,
         isDnDEnabled: false,
       };
